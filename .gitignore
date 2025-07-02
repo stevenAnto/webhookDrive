@@ -1,0 +1,19 @@
+# Ignorar entorno virtual completo
+ambiente/
+
+# Ignorar archivos de credenciales y tokens
+client_secret_*.json
+token.pickle
+
+# Ignorar archivos pycache y temporales de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignorar archivos de sistema o editor
+.DS_Store
+*.swp
+*.swo
+.vscode/
+.idea/
