@@ -1,5 +1,7 @@
 # Ignorar entorno virtual completo
 ambiente/
+venv/
+.env/
 
 # Ignorar archivos de credenciales y tokens
 client_secret_*.json
@@ -17,3 +19,7 @@ __pycache__/
 *.swo
 .vscode/
 .idea/
+
+*.json
+*.pickle
+*.txt

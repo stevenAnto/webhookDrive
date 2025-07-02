@@ -76,9 +76,9 @@ Este script notificará a Google Drive para empezar a enviar cambios a tu endpoi
 
 Cada vez que subas, edites o elimines un archivo en tu Drive, recibirás una notificación y se imprimirá información en consola.
 
-## 🛡️ .gitignore sugerido
+##  Link de Video demostrativo
 
-
+https://youtu.be/vaf4G8jagUo
 
 # Archivos sensibles
 client_secret_*.json

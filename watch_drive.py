@@ -1,30 +1,37 @@
+import pickle
 import os
-import json
-import datetime
-from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from google.auth.transport.requests import Request
 
-# 1. Define los permisos que necesitas
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
 
-# 2. Carga tus credenciales
-flow = InstalledAppFlow.from_client_secrets_file(
-    './client_secret_722584203991-psbocitc7vdn81btjf8en3ujf6b78gi0.apps.googleusercontent.com.json', SCOPES)
-creds = flow.run_local_server(port=0)
+def load_credentials():
+    creds = None
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            raise Exception("No se encontraron credenciales válidas. Ejecuta authorize.py primero.")
+    return creds
 
-# 3. Crea el servicio de Drive
+creds = load_credentials()
 service = build('drive', 'v3', credentials=creds)
 
-# 4. Configura el webhook (canal de notificaciones)
+start_page_token = service.changes().getStartPageToken().execute()['startPageToken']
+print("🔖 Usando startPageToken:", start_page_token)
+
 channel = {
-    "id": "mi-unico-id-canal-12345",  # ID único del canal (puede ser cualquier string único)
+    "id": "mi-unico-id-canal-6234569",
     "type": "web_hook",
-    "address": "https://f1dc-2001-1388-4a01-972a-10d8-e718-2cbf-dcb0.ngrok-free.app/webhook"  # Tu URL pública de webhook
+    "address": "https://3d52-2001-1388-4a01-972a-dd29-1613-9604-b301.ngrok-free.app/webhook"
 }
+response = service.changes().watch(body=channel, pageToken=start_page_token).execute()
 
-# 5. Inicia la suscripción al canal
-response = service.changes().watch(body=channel, pageToken=service.changes().getStartPageToken().execute()['startPageToken']).execute()
+with open('last_token.txt', 'w') as f:
+    f.write(start_page_token)
+print("Suscripción activa.")
+print(response)
 
-# 6. Muestra la respuesta
-print("✅ Suscripción activa.")
-print(json.dumps(response, indent=2))
